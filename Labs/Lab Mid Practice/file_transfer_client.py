@@ -69,3 +69,20 @@ def send():
             
 threading.Thread(target=receive, daemon=True).start()
 send()
+
+"""
+Normal message:
+
+client types text
+client sends MSG|hello
+server broadcasts it
+other clients print it
+
+File:
+
+client types /file mypic.jpg
+client sends FILE|mypic.jpg|<size>
+client sends file bytes in chunks
+server forwards header + bytes
+other clients save it back into a file
+"""
