@@ -1,0 +1,27 @@
+1. Your browser creates a DNSMessage(domain="google.com", recursion_desired=True)
+   → is_reply=False, question="google.com", answers=[]
+
+2. Local DNS receives it, checks its CACHE → miss
+
+3. Local DNS creates a NEW DNSMessage and asks Root DNS:
+   → "who handles .com?"
+
+4. Root DNS replies with a DNSMessage:
+   → authority=["a.gtld-servers.net."]   ← referral, not a real answer
+   → is_authoritative=False
+
+5. Local DNS asks TLD DNS (a.gtld-servers.net):
+   → "who handles google.com?"
+
+6. TLD DNS replies:
+   → authority=["ns1.google.com."]   ← another referral
+
+7. Local DNS asks Authoritative DNS (ns1.google.com):
+   → "what's the IP of google.com?"
+
+8. Authoritative DNS replies with a DNSMessage:
+   → answers=[{type:"A", value:"142.250.1.1"}]
+   → is_authoritative=True   ← this flag is now True!
+
+9. Local DNS caches this answer, then replies to your browser
+   with the same answer
