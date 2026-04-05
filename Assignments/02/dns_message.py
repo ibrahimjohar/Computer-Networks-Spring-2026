@@ -1,3 +1,4 @@
+#ibrahim johar farooqi - 23K-0074 - CN A2
 import random
 
 class DNSMessage:
@@ -26,14 +27,14 @@ class DNSMessage:
         self.authority = []                     #NS records pointing to authoritative servers
         self.additional = []                    #extra info 
         
-    def add_answer(self, record_type, value):
+    def add_answer(self, record_type, value, ttl=300):
         #add a DNS record to the answer section
-        self.answers.append({"type": record_type, "value": value})
+        self.answers.append({"type": record_type, "value": value, "ttl": ttl})
         self.num_answer_rrs += 1
     
-    def add_authority(self, nameserver):
-        #add a NS record to the authority section
-        self.authority.append({"type": "NS", "value": nameserver})
+    def add_authority(self, record_type, value, ttl=86400):
+        #add a record to the authority section
+        self.authority.append({"type": record_type, "value": value, "ttl": ttl})
         self.num_authority_rrs += 1
         
     def display(self):
@@ -50,10 +51,10 @@ class DNSMessage:
             grouped = {}
             
             for record in self.answers:
-                grouped.setdefault(record["type"], []).append(record["value"])
+                grouped.setdefault(record["type"], []).append(f"{record["value"]} (TTL: {record['ttl']}s)")
             for rtype, values in grouped.items():
                 print(f"  {rtype}: {', '.join(values)}")
                 
         if self.authority:
-            ns_values = [r["value"] for r in self.authority]
-            print(f"  NS: {', '.join(ns_values)}")
+            ns_values = [f"{r['value']} (TTL:{r['ttl']}s)" for r in self.authority]
+            print(f"  NS (authority): {', '.join(ns_values)}")
